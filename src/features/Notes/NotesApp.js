@@ -24,7 +24,7 @@ class NotesApp extends Component {
           onNoteCreate={this.addNote}
           modifyNote={note}
         ></NotesEditor>
-        <NotesGrid></NotesGrid>
+        <NotesGrid notes={this.state.notes}></NotesGrid>
       </div>
     );
   }

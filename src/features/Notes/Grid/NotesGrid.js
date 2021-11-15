@@ -3,22 +3,10 @@ import style from "./NotesGrid.module.css";
 import Note from "./Note/GridNote";
 class NotesGrid extends React.Component {
   render() {
-    return (
-      <div className={style.notesGrid}>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-        <Note></Note>
-      </div>
-    );
+    const noteNodes = this.props.notes.map((note) => {
+      return <Note key={note.createDate} data={note}></Note>;
+    });
+    return <div className={style.notesGrid}>{noteNodes}</div>;
   }
 }
 

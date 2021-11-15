@@ -1,6 +1,7 @@
 export default class NoteModel {
-  constructor(createDate, content) {
-    this.content = content;
+  constructor(createDate, title, content) {
     this.createDate = createDate;
+    this.title = title;
+    this.content = content;
   }
 }

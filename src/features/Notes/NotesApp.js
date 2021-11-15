@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import style from "./App.module.css";
 import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
-import NoteModel from "./NoteModel";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
@@ -29,13 +28,9 @@ class NotesApp extends Component {
     });
   }
   render() {
-    let note = new NoteModel("wwww", "wasas");
     return (
       <div className={style.app}>
-        <NotesEditor
-          onNoteCreate={this.addNote}
-          modifyNote={note}
-        ></NotesEditor>
+        <NotesEditor onNoteCreate={this.addNote}></NotesEditor>
         <NotesGrid
           onDelete={this.deleteNote}
           notes={this.state.notes}

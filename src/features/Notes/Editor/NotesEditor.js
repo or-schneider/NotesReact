@@ -6,9 +6,10 @@ class NotesEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { content: "" };
+    this.state = { title: "", content: "" };
 
     this.submit = this.submit.bind(this);
+    this.changeTitle = this.changeTitle.bind(this);
     this.changeContent = this.changeContent.bind(this);
     this.create = this.create.bind(this);
   }
@@ -20,15 +21,28 @@ class NotesEditor extends React.Component {
   changeContent(event) {
     this.setState({ content: event.target.value });
   }
+  changeTitle(event) {
+    this.setState({ title: event.target.value });
+  }
   create() {
     const dateNow = Date.now();
-    const noteData = new NoteModel(dateNow, this.state.content);
+    const noteData = new NoteModel(
+      dateNow,
+      this.state.title,
+      this.state.content
+    );
 
     this.props.onNoteCreate(noteData);
   }
   render() {
     return (
       <form onSubmit={this.submit} className={style.notesEditor}>
+        <input
+          className={style.titleInput}
+          placeholder="Title"
+          value={this.state.title}
+          onChange={this.changeTitle}
+        />
         <textarea
           className={style.contentTextArea}
           rows="10"

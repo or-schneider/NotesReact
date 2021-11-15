@@ -19,6 +19,9 @@ class NotesApp extends Component {
     });
   }
   deleteNote(note) {
+    if (!window.confirm("Are you sure you want to delete your note?")) {
+      return;
+    }
     this.setState(() => {
       const notes = this.state.notes;
       notes.delete(note.createDate);

@@ -23,7 +23,7 @@
 .date {
   font-size: 0.9rem;
 }
-.closeButton {
+.deleteButton {
   background-color: transparent;
   border: none;
   cursor: pointer;

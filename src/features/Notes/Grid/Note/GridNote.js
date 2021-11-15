@@ -10,7 +10,10 @@ class GridNote extends React.Component {
       <div className={style.gridNote}>
         <div className={style.header}>
           <div className={style.date}>{formattedDate}</div>
-          <button onClick={this.props.onClose} className={style.closeButton}>
+          <button
+            onClick={() => this.props.onDelete(this.props.data)}
+            className={style.deleteButton}
+          >
             &#10006;
           </button>
         </div>

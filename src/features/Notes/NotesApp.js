@@ -6,15 +6,24 @@ import NoteModel from "./NoteModel";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
-    this.state = { notes: [] };
+    this.state = { notes: new Map() };
 
     this.addNote = this.addNote.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
   }
   addNote(note) {
-    const notes = this.state.notes;
-    notes.push(note);
-
-    this.setState({ notes });
+    this.setState(() => {
+      const notes = this.state.notes;
+      notes.set(note.createDate, note);
+      return { notes };
+    });
+  }
+  deleteNote(note) {
+    this.setState(() => {
+      const notes = this.state.notes;
+      notes.delete(note.createDate);
+      return { notes };
+    });
   }
   render() {
     let note = new NoteModel("wwww", "wasas");
@@ -24,7 +33,10 @@ class NotesApp extends Component {
           onNoteCreate={this.addNote}
           modifyNote={note}
         ></NotesEditor>
-        <NotesGrid notes={this.state.notes}></NotesGrid>
+        <NotesGrid
+          onDelete={this.deleteNote}
+          notes={this.state.notes}
+        ></NotesGrid>
       </div>
     );
   }

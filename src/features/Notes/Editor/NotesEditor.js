@@ -49,6 +49,7 @@ class NotesEditor extends React.Component {
           placeholder="Your note..."
           value={this.state.content}
           onChange={this.changeContent}
+          required
         ></textarea>
         <button className={style.submitButton} type="submit" value="submit">
           Add

@@ -42,9 +42,11 @@ class NotesEditor extends React.Component {
     this.props.onNoteCreate(noteData);
   }
   update() {
+    const dateNow = Date.now();
     const note = this.props.note;
     note.content = this.state.content;
     note.title = this.state.title;
+    note.updateDate = dateNow;
     this.props.onNoteUpdate(note);
   }
   componentDidMount() {

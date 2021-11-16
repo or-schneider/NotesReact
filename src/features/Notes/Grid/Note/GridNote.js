@@ -5,8 +5,16 @@ import formatDate from "./formatDate";
 class GridNote extends React.Component {
   render() {
     if (!this.props.data) return null;
-    const { createDate, title, content } = this.props.data;
-    const formattedDate = formatDate(createDate);
+    const { createDate, title, content, updateDate } = this.props.data;
+    const formattedCreateDate = formatDate(createDate);
+
+    let updateDateElement;
+    if (updateDate) {
+      let formattedUpdateDate = formatDate(updateDate);
+      updateDateElement = (
+        <div className={style.date}>Updated: {formattedUpdateDate}</div>
+      );
+    }
 
     let titleElement = null;
     if (title.length > 0)
@@ -21,7 +29,6 @@ class GridNote extends React.Component {
         }}
       >
         <div className={style.header}>
-          <div className={style.date}>{formattedDate}</div>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -34,6 +41,8 @@ class GridNote extends React.Component {
         </div>
         {titleElement}
         <p className={style.content}>{content}</p>
+        <div className={style.date}>Created: {formattedCreateDate}</div>
+        {updateDateElement}
       </div>
     );
   }

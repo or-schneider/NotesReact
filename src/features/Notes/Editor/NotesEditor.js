@@ -12,11 +12,18 @@ class NotesEditor extends React.Component {
     this.changeTitle = this.changeTitle.bind(this);
     this.changeContent = this.changeContent.bind(this);
     this.create = this.create.bind(this);
+    this.update = this.update.bind(this);
   }
   submit(event) {
     event.preventDefault();
+    if (this.props.note) this.update();
+    else this.create();
 
-    this.create();
+    this.setState(() => {
+      return { title: "", content: "" };
+    });
+
+    if (this.props.onNoteSubmit) this.props.onNoteSubmit();
   }
   changeContent(event) {
     this.setState({ content: event.target.value });
@@ -34,7 +41,27 @@ class NotesEditor extends React.Component {
 
     this.props.onNoteCreate(noteData);
   }
+  update() {
+    const note = this.props.note;
+    note.content = this.state.content;
+    note.title = this.state.title;
+    this.props.onNoteUpdate(note);
+  }
+  componentDidMount() {
+    if (this.props.note) {
+      this.setState(() => {
+        return {
+          title: this.props.note.title,
+          content: this.props.note.content,
+        };
+      });
+    }
+  }
   render() {
+    let buttonElementText;
+    if (this.props.note) buttonElementText = "Update";
+    else buttonElementText = "Add";
+
     return (
       <form onSubmit={this.submit} className={style.notesEditor}>
         <input
@@ -52,7 +79,7 @@ class NotesEditor extends React.Component {
           required
         ></textarea>
         <button className={style.submitButton} type="submit" value="submit">
-          Add
+          {buttonElementText}
         </button>
       </form>
     );

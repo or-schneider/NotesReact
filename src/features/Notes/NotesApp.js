@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import style from "./App.module.css";
 import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
-import NoteView from "features/Notes/Grid/Note/GridNote";
 import AppModal from "features/Notes/Modal/Modal";
 
 class NotesApp extends Component {
@@ -11,6 +10,7 @@ class NotesApp extends Component {
     this.state = { notes: new Map(), viewNote: null };
 
     this.addNote = this.addNote.bind(this);
+    this.updateNote = this.updateNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.viewNote = this.viewNote.bind(this);
     this.unViewNote = this.unViewNote.bind(this);
@@ -19,6 +19,17 @@ class NotesApp extends Component {
     this.setState(() => {
       const notes = this.state.notes;
       notes.set(note.createDate, note);
+      return { notes };
+    });
+  }
+  updateNote(note) {
+    this.setState(() => {
+      const notes = this.state.notes;
+      const viewNote = this.state.viewNote;
+      for (const key in note) {
+        viewNote[key] = note[key];
+      }
+
       return { notes };
     });
   }
@@ -48,10 +59,12 @@ class NotesApp extends Component {
           notes={this.state.notes}
         ></NotesGrid>
         <AppModal showModal={!!this.state.viewNote} close={this.unViewNote}>
-          <NoteView
-            onDelete={this.unViewNote}
-            data={this.state.viewNote}
-          ></NoteView>
+          <NotesEditor
+            note={this.state.viewNote}
+            onNoteCreate={this.addNote}
+            onNoteUpdate={this.updateNote}
+            onNoteSubmit={this.unViewNote}
+          ></NotesEditor>
         </AppModal>
       </div>
     );

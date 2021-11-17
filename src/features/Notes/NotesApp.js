@@ -3,22 +3,37 @@ import style from "./App.module.css";
 import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
 import AppModal from "features/Notes/Modal/Modal";
-
+import { serializeJson, deserializeJson } from "./JsonSerializer";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
     this.state = { notes: new Map(), viewNote: null };
 
+    let notes = localStorage.getItem("notes");
+    if (notes) {
+      notes = deserializeJson(notes);
+      this.state.notes = notes;
+    }
+
+    this.saveStorage = this.saveStorage.bind(this);
     this.addNote = this.addNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.viewNote = this.viewNote.bind(this);
     this.unViewNote = this.unViewNote.bind(this);
   }
+  saveStorage() {
+    const notes = this.state.notes;
+    const notesJson = serializeJson(notes);
+    console.log(notesJson);
+    localStorage.setItem("notes", notesJson);
+  }
   addNote(note) {
     this.setState(() => {
       const notes = this.state.notes;
       notes.set(note.createDate, note);
+      this.saveStorage();
+
       return { notes };
     });
   }
@@ -30,6 +45,8 @@ class NotesApp extends Component {
         viewNote[key] = note[key];
       }
 
+      this.saveStorage();
+
       return { notes };
     });
   }
@@ -40,6 +57,9 @@ class NotesApp extends Component {
     this.setState(() => {
       const notes = this.state.notes;
       notes.delete(note.createDate);
+
+      this.saveStorage();
+
       return { notes };
     });
   }

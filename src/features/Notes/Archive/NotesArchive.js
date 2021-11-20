@@ -1,6 +1,6 @@
 import React from "react";
 import style from "./NotesArchive.module.css";
-
+import ArchiveNote from "./Note/ArchiveNote";
 class NotesArchive extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +14,12 @@ class NotesArchive extends React.Component {
     });
   }
   render() {
+    const { notes } = this.props;
+
+    const archiveNotesElements = notes.map((note, index) => {
+      note = notes[notes.length - 1 - index];
+      return <ArchiveNote key={note.createDate} data={note}></ArchiveNote>;
+    });
     return (
       <div className={style.archive}>
         <button
@@ -26,6 +32,7 @@ class NotesArchive extends React.Component {
         >
           Archive
         </button>
+        {this.state.isVisible ? <div>{archiveNotesElements}</div> : null}
       </div>
     );
   }

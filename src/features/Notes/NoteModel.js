@@ -4,5 +4,6 @@ export default class NoteModel {
     this.title = title;
     this.content = content;
     this.updateDate = updateDate;
+    this.isArchived = false;
   }
 }

@@ -3,6 +3,7 @@ import style from "./NotesEditor.module.css";
 import NoteModel from "features/Notes/NoteModel";
 import Reminder from "./Reminder";
 import startNoteReminderTimeout from "features/Notes/startNoteReminderTimeout";
+import DynamicTextArea from "features/TextArea/DynamicTextArea";
 class NotesEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -101,14 +102,14 @@ class NotesEditor extends React.Component {
           value={this.state.title}
           onChange={this.changeTitle}
         />
-        <textarea
+        <DynamicTextArea
           className={style.contentTextArea}
-          rows="10"
+          rows="3"
           placeholder="Your note..."
           value={this.state.content}
           onChange={this.changeContent}
           required
-        ></textarea>
+        ></DynamicTextArea>
         <Reminder
           value={this.state.reminderDate}
           onSet={this.changeReminderDate}

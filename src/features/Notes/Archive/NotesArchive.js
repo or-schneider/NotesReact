@@ -13,6 +13,7 @@ class NotesArchive extends React.Component {
     this.selectNote = this.selectNote.bind(this);
     this.unselectNote = this.unselectNote.bind(this);
     this.restoreSelectedNote = this.restoreSelectedNote.bind(this);
+    this.deleteSelectedNote = this.deleteSelectedNote.bind(this);
   }
   toggleVisibility() {
     this.setState((prevState) => {
@@ -28,6 +29,11 @@ class NotesArchive extends React.Component {
   restoreSelectedNote() {
     const note = this.state.selectedNote;
     this.props.onRestoreNote(note);
+    this.unselectNote();
+  }
+  deleteSelectedNote() {
+    const note = this.state.selectedNote;
+    this.props.onDeleteNote(note);
     this.unselectNote();
   }
   render() {
@@ -56,7 +62,7 @@ class NotesArchive extends React.Component {
         >
           Archive
         </button>
-        {this.state.isVisible ? (
+        {this.state.isVisible && archiveNotesElements.length > 0 ? (
           <div className={style.notes}>{archiveNotesElements}</div>
         ) : null}
 
@@ -64,6 +70,9 @@ class NotesArchive extends React.Component {
           <NoteView onDelete={this.unselectNote} data={selectedNote}>
             <button onClick={this.restoreSelectedNote} className={style.button}>
               Restore
+            </button>
+            <button onClick={this.deleteSelectedNote} className={style.button}>
+              Delete
             </button>
           </NoteView>
         </AppModal>

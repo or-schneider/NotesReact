@@ -150,6 +150,7 @@ class NotesApp extends Component {
         </div>
         <NotesArchive
           onRestoreNote={this.restoreArchiveNote}
+          onDeleteNote={this.deleteNote}
           notes={archivedNotes}
         ></NotesArchive>
 

@@ -71,8 +71,8 @@ class NotesEditor extends React.Component {
     const reminderDate = this.state.reminderDate;
 
     clearTimeout(note.reminderTimeout);
+    note.reminderDate = reminderDate;
     if (reminderDate) {
-      note.reminderDate = reminderDate;
       note.reminderTimeout = startNoteReminderTimeout(note);
     }
 

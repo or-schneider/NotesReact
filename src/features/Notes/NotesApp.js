@@ -5,6 +5,7 @@ import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
 import AppModal from "features/Notes/Modal/Modal";
 import NotesArchive from "features/Notes/Archive/NotesArchive";
+import startNoteReminderTimeout from "./startNoteReminderTimeout";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +24,22 @@ class NotesApp extends Component {
     this.loadStorageAsync();
     this.enableAutosaveStorage();
   }
+
   async loadStorageAsync() {
+    for (const [, note] of this.state.notes) {
+      if (note.reminderTimeout) {
+        clearTimeout(note.reminderTimeout);
+        note.reminderTimeout = null;
+      }
+    }
     let notes = await localForage.getItem("notes");
+
+    for (const [, note] of notes) {
+      if (note.isArchived) continue;
+      if (note.reminderDate)
+        note.reminderTimeout = startNoteReminderTimeout(note);
+    }
+
     if (notes) {
       this.setState({ notes });
     }
@@ -78,6 +93,9 @@ class NotesApp extends Component {
       const notes = this.state.notes;
       notes.delete(note.createDate);
 
+      clearTimeout(note.reminderTimeout);
+      note.reminderTimeout = null;
+
       return { notes };
     });
   }
@@ -87,7 +105,11 @@ class NotesApp extends Component {
     }
     this.setState(() => {
       const notes = this.state.notes;
-      notes.get(note.createDate).isArchived = true;
+      note = notes.get(note.createDate);
+      note.isArchived = true;
+
+      clearTimeout(note.reminderTimeout);
+      note.reminderTimeout = null;
 
       return { notes };
     });
@@ -95,7 +117,10 @@ class NotesApp extends Component {
   restoreArchiveNote(note) {
     this.setState(() => {
       const notes = this.state.notes;
-      notes.get(note.createDate).isArchived = false;
+      note = notes.get(note.createDate);
+      note.isArchived = false;
+      if (note.reminderDate)
+        note.reminderTimeout = startNoteReminderTimeout(note);
 
       return { notes };
     });

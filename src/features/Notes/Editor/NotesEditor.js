@@ -2,6 +2,7 @@ import React from "react";
 import style from "./NotesEditor.module.css";
 import NoteModel from "features/Notes/NoteModel";
 import Reminder from "./Reminder";
+import startNoteReminderTimeout from "features/Notes/startNoteReminderTimeout";
 class NotesEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -44,14 +45,8 @@ class NotesEditor extends React.Component {
     );
     const reminderDate = this.state.reminderDate;
     if (reminderDate) {
-      let reminderRemainingTime = reminderDate - new Date();
-      if (reminderRemainingTime > 0) {
-        noteData.reminderDate = reminderDate;
-        noteData.reminderTimeout = this.startReminderTimeout(
-          noteData,
-          reminderRemainingTime
-        );
-      }
+      noteData.reminderDate = reminderDate;
+      noteData.reminderTimeout = startNoteReminderTimeout(noteData);
     }
 
     this.props.onNoteCreate(noteData);
@@ -76,14 +71,8 @@ class NotesEditor extends React.Component {
 
     clearTimeout(note.reminderTimeout);
     if (reminderDate) {
-      let reminderRemainingTime = reminderDate - new Date();
-      if (reminderRemainingTime > 0) {
-        note.reminderDate = reminderDate;
-        note.reminderTimeout = this.startReminderTimeout(
-          note,
-          reminderRemainingTime
-        );
-      }
+      note.reminderDate = reminderDate;
+      note.reminderTimeout = startNoteReminderTimeout(note);
     }
 
     this.props.onNoteUpdate(note);

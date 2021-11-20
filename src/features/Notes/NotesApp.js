@@ -4,6 +4,7 @@ import style from "./App.module.css";
 import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
 import AppModal from "features/Notes/Modal/Modal";
+import NotesArchive from "features/Notes/Archive/NotesArchive";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
@@ -89,12 +90,16 @@ class NotesApp extends Component {
   render() {
     return (
       <div className={style.app}>
-        <NotesEditor onNoteCreate={this.addNote}></NotesEditor>
-        <NotesGrid
-          onDelete={this.deleteNote}
-          onNoteClick={this.viewNote}
-          notes={this.state.notes}
-        ></NotesGrid>
+        <div className={style.content}>
+          <NotesEditor onNoteCreate={this.addNote}></NotesEditor>
+          <NotesGrid
+            onDelete={this.deleteNote}
+            onNoteClick={this.viewNote}
+            notes={this.state.notes}
+          ></NotesGrid>
+        </div>
+        <NotesArchive></NotesArchive>
+
         <AppModal showModal={!!this.state.viewNote} close={this.unViewNote}>
           <NotesEditor
             note={this.state.viewNote}

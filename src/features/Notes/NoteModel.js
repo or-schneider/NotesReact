@@ -5,5 +5,7 @@ export default class NoteModel {
     this.content = content;
     this.updateDate = updateDate;
     this.isArchived = false;
+    this.reminderDate = null;
+    this.reminderTimeout = null;
   }
 }

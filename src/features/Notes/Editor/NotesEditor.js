@@ -1,18 +1,19 @@
 import React from "react";
 import style from "./NotesEditor.module.css";
 import NoteModel from "features/Notes/NoteModel";
-
+import Reminder from "./Reminder";
 class NotesEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { title: "", content: "" };
+    this.state = { title: "", content: "", reminderDate: null };
 
     this.submit = this.submit.bind(this);
     this.changeTitle = this.changeTitle.bind(this);
     this.changeContent = this.changeContent.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
+    this.changeReminderDate = this.changeReminderDate.bind(this);
   }
   submit(event) {
     event.preventDefault();
@@ -31,6 +32,9 @@ class NotesEditor extends React.Component {
   changeTitle(event) {
     this.setState({ title: event.target.value });
   }
+  changeReminderDate(date) {
+    this.setState({ reminderDate: date });
+  }
   create() {
     const dateNow = Date.now();
     const noteData = new NoteModel(
@@ -38,8 +42,28 @@ class NotesEditor extends React.Component {
       this.state.title,
       this.state.content
     );
+    const reminderDate = this.state.reminderDate;
+    if (reminderDate) {
+      let reminderRemainingTime = reminderDate - new Date();
+      if (reminderRemainingTime > 0) {
+        noteData.reminderDate = reminderDate;
+        noteData.reminderTimeout = this.startReminderTimeout(
+          noteData,
+          reminderRemainingTime
+        );
+      }
+    }
 
     this.props.onNoteCreate(noteData);
+  }
+  startReminderTimeout(noteData, remainingMS) {
+    return setTimeout(() => {
+      window.alert(
+        `Notification:
+          ${noteData.title}
+          ${noteData.content}`
+      );
+    }, remainingMS);
   }
   update() {
     const dateNow = Date.now();
@@ -47,6 +71,21 @@ class NotesEditor extends React.Component {
     note.content = this.state.content;
     note.title = this.state.title;
     note.updateDate = dateNow;
+
+    const reminderDate = this.state.reminderDate;
+
+    clearTimeout(note.reminderTimeout);
+    if (reminderDate) {
+      let reminderRemainingTime = reminderDate - new Date();
+      if (reminderRemainingTime > 0) {
+        note.reminderDate = reminderDate;
+        note.reminderTimeout = this.startReminderTimeout(
+          note,
+          reminderRemainingTime
+        );
+      }
+    }
+
     this.props.onNoteUpdate(note);
   }
   componentDidMount() {
@@ -55,6 +94,7 @@ class NotesEditor extends React.Component {
         return {
           title: this.props.note.title,
           content: this.props.note.content,
+          reminderDate: this.props.note.reminderDate,
         };
       });
     }
@@ -80,6 +120,10 @@ class NotesEditor extends React.Component {
           onChange={this.changeContent}
           required
         ></textarea>
+        <Reminder
+          value={this.state.reminderDate}
+          onSet={this.changeReminderDate}
+        ></Reminder>
         <button className={style.submitButton} type="submit" value="submit">
           {buttonElementText}
         </button>

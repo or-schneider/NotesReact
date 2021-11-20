@@ -1,3 +1,5 @@
+import React, { useRef, useEffect } from "react";
+
 function DynamicTextArea({
   onInput,
   onChange,
@@ -8,11 +10,17 @@ function DynamicTextArea({
   isRequired,
   className,
 }) {
+  const textAreaRef = useRef(null);
+  useEffect(() => {
+    fitTextAreaToContent({ target: textAreaRef.current });
+  });
+
   function handleInput(event) {
     fitTextAreaToContent(event);
     if (onInput) onInput(event);
   }
   function fitTextAreaToContent(event) {
+    console.log(event);
     let offset = event.target.offsetHeight - event.target.clientHeight;
     event.target.style.height = "auto";
     event.target.style.height = event.target.scrollHeight + offset + "px";
@@ -28,6 +36,7 @@ function DynamicTextArea({
       isrequired={isRequired}
       onInput={handleInput}
       onChange={onChange}
+      ref={textAreaRef}
     ></textarea>
   );
 }

@@ -1,51 +1,68 @@
 import React, { Component } from "react";
+import localForage from "localforage";
 import style from "./App.module.css";
 import NotesEditor from "features/Notes/Editor/NotesEditor";
 import NotesGrid from "features/Notes/Grid/NotesGrid";
 import AppModal from "features/Notes/Modal/Modal";
-import { serializeJson, deserializeJson } from "./JsonSerializer";
 class NotesApp extends Component {
   constructor(props) {
     super(props);
     this.state = { notes: new Map(), viewNote: null };
 
-    let notes = localStorage.getItem("notes");
-    if (notes) {
-      notes = deserializeJson(notes);
-      this.state.notes = notes;
-    }
-
-    this.saveStorage = this.saveStorage.bind(this);
+    this.saveStorage = this.saveStorageAsync.bind(this);
     this.addNote = this.addNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.viewNote = this.viewNote.bind(this);
     this.unViewNote = this.unViewNote.bind(this);
   }
-  saveStorage() {
+  componentDidMount() {
+    this.loadStorageAsync();
+    this.enableAutosaveStorage();
+  }
+  async loadStorageAsync() {
+    let notes = await localForage.getItem("notes");
+    if (notes) {
+      this.setState({ notes });
+    }
+  }
+  enableAutosaveStorage() {
+    document.addEventListener("beforeunload", this.saveStorageAsync);
+    window.addEventListener("blur", () => this.saveStorageAsync());
+
+    window.addEventListener("storage", () => {
+      this.loadStorageAsync();
+    });
+  }
+  async saveStorageAsync() {
     const notes = this.state.notes;
-    const notesJson = serializeJson(notes);
-    console.log(notesJson);
-    localStorage.setItem("notes", notesJson);
+    await localForage.setItem("notes", notes);
+
+    let dispatchStorageEventTrigger = localStorage.getItem(
+      "dispatchStorageEventTrigger"
+    );
+    dispatchStorageEventTrigger = dispatchStorageEventTrigger === "true";
+    dispatchStorageEventTrigger = !dispatchStorageEventTrigger;
+    localStorage.setItem(
+      "dispatchStorageEventTrigger",
+      dispatchStorageEventTrigger
+    );
   }
   addNote(note) {
-    this.setState(() => {
-      const notes = this.state.notes;
+    this.setState((prevState) => {
+      const notes = prevState.notes;
       notes.set(note.createDate, note);
-      this.saveStorage();
 
       return { notes };
     });
   }
   updateNote(note) {
-    this.setState(() => {
-      const notes = this.state.notes;
-      const viewNote = this.state.viewNote;
+    this.setState((prevState) => {
+      const notes = prevState.notes;
+      const viewNote = prevState.viewNote;
       for (const key in note) {
         viewNote[key] = note[key];
       }
-
-      this.saveStorage();
 
       return { notes };
     });
@@ -58,7 +75,7 @@ class NotesApp extends Component {
       const notes = this.state.notes;
       notes.delete(note.createDate);
 
-      this.saveStorage();
+      this.saveStorageAsync();
 
       return { notes };
     });

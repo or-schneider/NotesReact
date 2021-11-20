@@ -6,7 +6,7 @@
   /* align-items: center; */
   justify-content: flex-start;
 }
-.visibilityButton {
+.button {
   font-weight: bold;
   border: solid 1px rgba(0, 0, 0, 0.5);
   border-radius: 6px;
@@ -16,10 +16,10 @@
 
   /* flex-grow: 1; */
 }
-.visibilityButton:hover {
+.button:hover {
   border: solid 1px rgba(30, 82, 223, 0.89);
 }
-.visibilityButton:active {
+.button:active {
   outline: solid 1px rgba(0, 81, 255, 0.281);
 }
 .visibilityButtonActive {

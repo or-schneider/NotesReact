@@ -43,6 +43,7 @@ class GridNote extends React.Component {
         <p className={style.content}>{content}</p>
         <div className={style.date}>Created: {formattedCreateDate}</div>
         {updateDateElement}
+        {this.props.children}
       </div>
     );
   }

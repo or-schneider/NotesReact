@@ -15,6 +15,7 @@ class NotesApp extends Component {
     this.updateNote = this.updateNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
     this.archiveNote = this.archiveNote.bind(this);
+    this.restoreArchiveNote = this.restoreArchiveNote.bind(this);
     this.viewNote = this.viewNote.bind(this);
     this.unViewNote = this.unViewNote.bind(this);
   }
@@ -77,8 +78,6 @@ class NotesApp extends Component {
       const notes = this.state.notes;
       notes.delete(note.createDate);
 
-      this.saveStorageAsync();
-
       return { notes };
     });
   }
@@ -89,7 +88,14 @@ class NotesApp extends Component {
     this.setState(() => {
       const notes = this.state.notes;
       notes.get(note.createDate).isArchived = true;
-      this.saveStorageAsync();
+
+      return { notes };
+    });
+  }
+  restoreArchiveNote(note) {
+    this.setState(() => {
+      const notes = this.state.notes;
+      notes.get(note.createDate).isArchived = false;
 
       return { notes };
     });
@@ -117,7 +123,10 @@ class NotesApp extends Component {
             notes={notes}
           ></NotesGrid>
         </div>
-        <NotesArchive notes={archivedNotes}></NotesArchive>
+        <NotesArchive
+          onRestoreNote={this.restoreArchiveNote}
+          notes={archivedNotes}
+        ></NotesArchive>
 
         <AppModal showModal={!!this.state.viewNote} close={this.unViewNote}>
           <NotesEditor

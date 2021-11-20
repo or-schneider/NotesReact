@@ -20,7 +20,6 @@ function DynamicTextArea({
     if (onInput) onInput(event);
   }
   function fitTextAreaToContent(event) {
-    console.log(event);
     let offset = event.target.offsetHeight - event.target.clientHeight;
     event.target.style.height = "auto";
     event.target.style.height = event.target.scrollHeight + offset + "px";

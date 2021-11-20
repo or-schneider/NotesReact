@@ -56,7 +56,9 @@ class NotesArchive extends React.Component {
         >
           Archive
         </button>
-        {this.state.isVisible ? <div>{archiveNotesElements}</div> : null}
+        {this.state.isVisible ? (
+          <div className={style.notes}>{archiveNotesElements}</div>
+        ) : null}
 
         <AppModal showModal={!!selectedNote} close={this.unselectNote}>
           <NoteView onDelete={this.unselectNote} data={selectedNote}>

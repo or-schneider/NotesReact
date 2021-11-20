@@ -6,4 +6,5 @@
   padding: 16px;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
 }

@@ -33,6 +33,7 @@ class NotesApp extends Component {
       }
     }
     let notes = await localForage.getItem("notes");
+    if (!notes) return;
 
     for (const [, note] of notes) {
       if (note.isArchived) continue;
@@ -40,9 +41,7 @@ class NotesApp extends Component {
         note.reminderTimeout = startNoteReminderTimeout(note);
     }
 
-    if (notes) {
-      this.setState({ notes });
-    }
+    this.setState({ notes });
   }
   enableAutosaveStorage() {
     window.addEventListener("beforeunload", this.saveStorageAsync);

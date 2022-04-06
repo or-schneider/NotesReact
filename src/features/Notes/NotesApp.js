@@ -32,7 +32,7 @@ class NotesApp extends Component {
         note.reminderTimeout = null;
       }
     }
-    let notes = await localForage.getItem("notes");
+    const notes = await localForage.getItem("notes");
     if (!notes) return;
 
     for (const [, note] of notes) {

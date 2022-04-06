@@ -10,7 +10,7 @@ class GridNote extends React.Component {
 
     let updateDateElement;
     if (updateDate) {
-      let formattedUpdateDate = formatDate(updateDate);
+      const formattedUpdateDate = formatDate(updateDate);
       updateDateElement = (
         <div className={style.date}>Updated: {formattedUpdateDate}</div>
       );

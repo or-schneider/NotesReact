@@ -23,7 +23,7 @@ class NotesEditor extends React.Component {
     else this.create();
 
     this.setState(() => {
-      return { title: "", content: "" };
+      return { title: "", content: "", reminderDate: null };
     });
 
     if (this.props.onNoteSubmit) this.props.onNoteSubmit();
